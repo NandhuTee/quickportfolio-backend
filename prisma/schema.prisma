@@ -8,20 +8,52 @@ datasource db {
 }
 
 model User {
-  id         Int         @id @default(autoincrement())
-  name       String
-  email      String      @unique
-  password   String
-  createdAt  DateTime    @default(now())
+  id        Int        @id @default(autoincrement())
+  name      String
+  email     String     @unique
+  password  String
+  createdAt DateTime   @default(now())
 
-  portfolios Portfolio[]   // one user can have many portfolios
+  portfolio Portfolio?
 }
 
 model Portfolio {
-  id        Int      @id @default(autoincrement())
-  bio       String?
+  id        Int        @id @default(autoincrement())
+  bio       String
   skills    String[]
+  userId    Int        @unique
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projects    Project[]
+  experiences Experience[]
+  links       SocialLink[]
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  githubUrl   String?
+  liveUrl     String?
+  portfolioId Int
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+}
+
+model Experience {
+  id          Int      @id @default(autoincrement())
+  company     String
+  role        String
+  description String?
+  startDate   DateTime
+  endDate     DateTime?
+  portfolioId Int
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+}
+
+model SocialLink {
+  id          Int      @id @default(autoincrement())
+  platform    String   // GitHub, LinkedIn, Twitter
+  url         String
+  portfolioId Int
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
 }

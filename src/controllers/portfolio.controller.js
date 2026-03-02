@@ -64,11 +64,12 @@ export const updatePortfolio = async (req, res) => {
 };
 
 // 🌍 Public Portfolio View
+
 export const getPublicPortfolio = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const portfolio = await prisma.portfolio.findFirst({
+    const portfolio = await prisma.portfolio.findUnique({
       where: { userId: Number(userId) },
       include: {
         user: {
@@ -77,18 +78,41 @@ export const getPublicPortfolio = async (req, res) => {
             email: true,
           },
         },
+        projects: true,
+        experiences: true,
+        links: true,
       },
     });
 
     if (!portfolio) {
-      return res.status(404).json({
-        message: "Portfolio not found",
-      });
+      return res.status(404).json({ message: "Portfolio not found" });
     }
 
     res.json(portfolio);
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong" });
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const getMyProjects = async (req, res) => {
+  try {
+    const portfolio = await prisma.portfolio.findUnique({
+      where: { userId: req.userId },
+    });
+
+    if (!portfolio) {
+      return res.status(404).json({ message: "Portfolio not found" });
+    }
+
+    const projects = await prisma.project.findMany({
+      where: { portfolioId: portfolio.id },
+    });
+
+    res.json(projects);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
