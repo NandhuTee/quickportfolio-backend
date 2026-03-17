@@ -14,5 +14,5 @@ router.post("/", authenticate, createPortfolio);
 router.get("/", authenticate, getPortfolio);
 router.put("/", authenticate, updatePortfolio);
 router.delete("/", authenticate, deletePortfolio);
-router.get("/:userId", getPublicPortfolio);
+router.get("/user/:username", getPublicPortfolio);
 export default router;

@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import prisma from "../prisma/client.js";
 
 export const register = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name,username, email, password } = req.body;
 
   try {
     const existingUser = await prisma.user.findUnique({
@@ -21,6 +21,7 @@ export const register = async (req, res) => {
     const user = await prisma.user.create({
       data: {
         name,
+        username,
         email,
         password: hashedPassword,
       },
@@ -30,6 +31,7 @@ export const register = async (req, res) => {
       message: "User registered successfully",
       user: {
         id: user.id,
+        username:user.username,
         name: user.name,
         email: user.email,
       },

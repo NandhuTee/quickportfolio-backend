@@ -8,10 +8,6 @@ import projectRoutes from "./routes/project.routes.js";
 import experienceRoutes from "./routes/experience.routes.js";
 import socialRoutes from "./routes/social.routes.js";
 
-
-
-
-
 dotenv.config();
 
 const app = express();
@@ -19,15 +15,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+/* ROUTES */
 app.use("/auth", authRoutes);
 app.use("/portfolio", portfolioRoutes);
 app.use("/projects", projectRoutes);
-app.get("/", (req, res) => {
-  res.json({ message: "QuickPortfolio API Running 🚀" });
-});
 app.use("/experience", experienceRoutes);
 app.use("/links", socialRoutes);
 
+/* HEALTH CHECK */
+app.get("/", (req, res) => {
+  res.json({ message: "QuickPortfolio API Running 🚀" });
+});
 
 const PORT = process.env.PORT || 5000;
 

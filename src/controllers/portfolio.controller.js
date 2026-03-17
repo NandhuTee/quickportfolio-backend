@@ -66,33 +66,30 @@ export const updatePortfolio = async (req, res) => {
 // 🌍 Public Portfolio View
 
 export const getPublicPortfolio = async (req, res) => {
-  try {
-    const { userId } = req.params;
+  const { username } = req.params;
 
-    const portfolio = await prisma.portfolio.findUnique({
-      where: { userId: Number(userId) },
-      include: {
-        user: {
-          select: {
-            name: true,
-            email: true,
-          },
+  const user = await prisma.user.findUnique({
+    where: { username },
+    include: {
+      portfolio: {
+        include: {
+          projects: true,
+          experiences: true,
+          links: true,
         },
-        projects: true,
-        experiences: true,
-        links: true,
       },
-    });
+    },
+  });
 
-    if (!portfolio) {
-      return res.status(404).json({ message: "Portfolio not found" });
-    }
-
-    res.json(portfolio);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
+  if (!user || !user.portfolio) {
+    return res.status(404).json({ message: "Portfolio not found" });
   }
+
+  res.json({
+    name: user.name,
+    username: user.username,
+    ...user.portfolio,
+  });
 };
 
 export const getMyProjects = async (req, res) => {
