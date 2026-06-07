@@ -111,3 +111,11 @@ git add README.md
 git commit -m "Add professional README"
 git push
 ```
+
+📄 License
+
+MIT License
+
+🙌 Acknowledgements
+
+Built for the GitHub Finish-Up-A-Thon Challenge.
