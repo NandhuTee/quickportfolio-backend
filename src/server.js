@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import prisma from "./prisma/client.js";
 
 import authRoutes from "./routes/auth.routes.js";
 import portfolioRoutes from "./routes/portfolio.routes.js";
@@ -16,12 +17,11 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://quickportfolio-frontend-llno.vercel.app/"
+      "https://quickportfolio-frontend-llno.vercel.app"
     ],
     credentials: true,
   })
 );
-
 
 app.use(express.json());
 
@@ -39,6 +39,20 @@ app.get("/", (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+async function startServer() {
+  try {
+    await prisma.$connect();
+
+    console.log("✅ PostgreSQL Connected");
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+
+  } catch (error) {
+    console.error("❌ Database connection failed");
+    console.error(error);
+  }
+}
+console.log(process.env.DATABASE_URL);
+startServer();
