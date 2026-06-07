@@ -30,9 +30,18 @@ export const createPortfolio = async (req, res) => {
 
 export const getPortfolio = async (req, res) => {
   try {
-    const portfolio = await prisma.portfolio.findMany({
-      where: { userId: req.userId },
-    });
+
+const portfolio = await prisma.portfolio.findUnique({
+  where: { userId: req.userId },
+  include: {
+    user: true,
+    projects: true,
+    experiences: true,
+    links: true,
+  },
+});
+
+
 
     res.json(portfolio);
   } catch (error) {

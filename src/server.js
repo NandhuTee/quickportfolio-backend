@@ -54,5 +54,5 @@ async function startServer() {
     console.error(error);
   }
 }
-console.log(process.env.DATABASE_URL);
+
 startServer();
