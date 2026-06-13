@@ -15,10 +15,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://quickportfolio-frontend-llno.vercel.app"
-    ],
+   origin: [ "http://localhost:5173", 
+    "http://localhost:5174",
+     "http://localhost:5175",
+     "https://quickportfolio-frontend-llno.vercel.app" ],
     credentials: true,
   })
 );
@@ -31,6 +31,9 @@ app.use("/portfolio", portfolioRoutes);
 app.use("/projects", projectRoutes);
 app.use("/experience", experienceRoutes);
 app.use("/links", socialRoutes);
+app.use("/uploads", express.static("uploads"));
+app.use(express.json());
+
 
 /* HEALTH CHECK */
 app.get("/", (req, res) => {

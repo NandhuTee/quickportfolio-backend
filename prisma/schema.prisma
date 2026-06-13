@@ -10,58 +10,50 @@ datasource db {
 model User {
   id        Int        @id @default(autoincrement())
   name      String
-  username  String     @unique
   email     String     @unique
   password  String
   createdAt DateTime   @default(now())
-
+  username  String     @unique
   portfolio Portfolio?
 }
 
 model Portfolio {
-  id          Int           @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   bio         String?
   skills      String[]
-  userId      Int           @unique
-
-  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  projects    Project[]
+ imageUrl String?
+  userId      Int          @unique
   experiences Experience[]
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projects    Project[]
   links       SocialLink[]
 }
 
 model Project {
-  id          Int        @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String
   description String?
   githubUrl   String?
   liveUrl     String?
-
   portfolioId Int
-
-  portfolio   Portfolio  @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
 }
 
 model Experience {
-  id          Int        @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   company     String
   role        String
   description String?
   startDate   DateTime
   endDate     DateTime?
-
   portfolioId Int
-
-  portfolio   Portfolio  @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
 }
 
 model SocialLink {
-  id          Int        @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   platform    String
   url         String
-
   portfolioId Int
-
-  portfolio   Portfolio  @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
 }

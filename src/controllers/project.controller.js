@@ -57,6 +57,48 @@ export const getMyProjects = async (req, res) => {
   }
 };
 
+
+// Update Project
+
+export const updateProject = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const {
+      title,
+      description,
+      githubUrl,
+      liveUrl,
+    } = req.body;
+
+    const updatedProject = await prisma.project.update({
+      where: {
+        id: Number(id),
+      },
+      data: {
+        title,
+        description,
+        githubUrl,
+        liveUrl,
+      },
+    });
+
+    res.json({
+      message: "Project updated successfully",
+      project: updatedProject,
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Server error",
+    });
+  }
+};
+
+
+
 // Delete Project
 export const deleteProject = async (req, res) => {
   try {
